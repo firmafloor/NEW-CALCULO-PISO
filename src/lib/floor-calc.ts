@@ -237,12 +237,12 @@ export function calculate(input: CalcInput): CalcResult {
   const mortarExact = mortarBag > 0 ? mortarKg / mortarBag : 0;
   const mortarBags = ceil(mortarExact);
 
-  // consumo de rejunte (kg/m²) = ((C+L) / (C×L)) × espessura(cm) × junta(cm) × 1,6
+  // consumo de rejunte (kg/m²) = ((C+L) / (C×L)) × espessura(cm) × junta(mm) × 1,6
   const groutRate =
     model.length > 0 && model.width > 0
       ? ((model.length + model.width) / (model.length * model.width)) *
         (model.thickness / 10) *
-        (groutJoint / 10) *
+        groutJoint *
         1.6
       : 0;
   const groutKg = groutRate * areaWithWaste;

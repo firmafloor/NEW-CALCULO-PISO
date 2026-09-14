@@ -617,7 +617,7 @@ function Field({
   children,
 }: {
   label: string;
-  help?: string;
+  help?: string | undefined;
   children: React.ReactNode;
 }) {
   return (

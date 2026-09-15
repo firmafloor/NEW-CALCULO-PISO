@@ -27,3 +27,6 @@
 - [x] Inicializar perfil e papel primeiro com a sessão autenticada, sem depender da chave administrativa
 - [x] Limpar silenciosamente sessões antigas ou inválidas armazenadas no navegador
 - [x] Estabilizar o contexto de autenticação para impedir tela branca após atualizações da aplicação
+- [x] Persistir perfil e função por usuário e restaurar imediatamente o administrador após recarregar
+- [x] Recuperar perfil e função diretamente pela sessão quando a inicialização remota estiver indisponível
+- [x] Tratar falhas transitórias de cabeçalho ou validação sem derrubar a calculadora

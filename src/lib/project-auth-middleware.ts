@@ -137,7 +137,7 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
     const authHeader = request?.headers.get("authorization");
 
     if (!authHeader?.startsWith("Bearer ")) {
-      throw new Error("Unauthorized: No valid authorization header provided");
+      throw new Error("Authentication service temporarily unavailable");
     }
 
     const token = authHeader.slice("Bearer ".length);
@@ -151,7 +151,6 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
 
     let claims: AuthClaims | null = null;
     let supabase: ReturnType<typeof createAuthenticatedClient> | null = null;
-    let receivedDefinitiveRejection = false;
     let receivedTemporaryFailure = false;
 
     for (const connection of authConnections(payload)) {
@@ -165,11 +164,9 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
             supabase = candidateClient;
             break;
           }
-          receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
           receivedTemporaryFailure ||= Boolean(error) && !isDefinitiveAuthError(error);
           if (isDefinitiveAuthError(error)) break;
         } catch (error) {
-          receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
           receivedTemporaryFailure ||= !isDefinitiveAuthError(error);
           if (isDefinitiveAuthError(error)) break;
         }
@@ -184,9 +181,7 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
       throw new Error(
         receivedTemporaryFailure
           ? "Authentication service temporarily unavailable"
-          : receivedDefinitiveRejection
-            ? "Unauthorized: Invalid token"
-            : "Authentication service temporarily unavailable",
+          : "Authentication service temporarily unavailable",
       );
     }
 

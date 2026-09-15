@@ -23,8 +23,8 @@ export const initializeProfile = createServerFn({ method: "POST" })
         _user_id: context.userId,
         _email: authData.user.email ?? "",
         _display_name:
-          data.displayName || String(authData.user.user_metadata?.display_name ?? ""),
-        _avatar_url: data.avatarUrl || undefined,
+          data.displayName || String(authData.user.user_metadata?.["display_name"] ?? ""),
+        _avatar_url: data.avatarUrl || "",
       },
     );
     if (initializeError) throw initializeError;

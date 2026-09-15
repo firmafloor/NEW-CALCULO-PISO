@@ -211,7 +211,11 @@ function Calculadora() {
       piecesPerBox: String(m.piecesPerBox),
       yieldPerBox: String(m.yieldPerBox),
             boxUnit: m.boxUnit,
-      requiresUnderlayment: m.requiresUnderlayment ?? false,
+            requiresUnderlayment: m.requiresUnderlayment ?? false,
+      includeLevelingCompound: m.includeLevelingCompound ?? true,
+      includeLvtAdhesive: m.includeLvtAdhesive ?? true,
+      includePreparationCompound: m.includePreparationCompound ?? true,
+      includePlaniprep: m.includePlaniprep ?? true,
     });
     setStatus("Edite os dados e salve as alterações.");
   }

@@ -223,7 +223,7 @@ function Calculadora() {
               ) : user ? (
                 <>
                   <div className="text-right">
-                    <p className="text-sm font-bold">{profile?.displayName || user.email}</p>
+                    <Link to="/perfil" className="text-sm font-bold hover:text-primary">{profile?.displayName || user.email}</Link>
                     <p className="text-xs text-muted-foreground">{role === "admin" ? "Administrador" : "Operador"}</p>
                   </div>
                   <button className="ghost" onClick={() => signOut()}>Sair</button>

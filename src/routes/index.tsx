@@ -253,7 +253,7 @@ function Calculadora() {
                   <button className="ghost" onClick={() => signOut()}>Sair</button>
                 </>
               ) : (
-                <Link to="/auth" className="primary">Entrar</Link>
+                                <Link to="/auth" className="primary">Administrador</Link>
               )}
             </div>
           </div>

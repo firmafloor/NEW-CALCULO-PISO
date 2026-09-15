@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
     calculate,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/floor-calc";
 import { useModels } from "@/lib/use-models";
 import logoAsset from "@/assets/firmafloor-logo.png.asset.json";
+import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +52,7 @@ const emptyForm = {
 };
 
 function Calculadora() {
+  const { user, profile, role, ready: authReady, isAdmin, signOut } = useAuth();
   const { models, saveModel, deleteModel, restoreDefaults, ready } = useModels();
   const [modelId, setModelId] = useState("porcelanato-urban");
 
@@ -209,11 +211,28 @@ function Calculadora() {
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <header className="mb-10 print-header">
-          <img
-            src={logoAsset.url}
-            alt="FirmaFloor — Piso laminado vinílico e revestimentos"
-            className="h-16 w-auto print-logo"
-          />
+          <div className="flex flex-wrap items-start justify-between gap-4 print:block">
+            <img
+              src={logoAsset.url}
+              alt="FirmaFloor — Piso laminado vinílico e revestimentos"
+              className="h-16 w-auto print-logo"
+            />
+            <div className="flex items-center gap-3 print:hidden">
+              {!authReady ? (
+                <span className="text-sm text-muted-foreground">Verificando acesso...</span>
+              ) : user ? (
+                <>
+                  <div className="text-right">
+                    <p className="text-sm font-bold">{profile?.displayName || user.email}</p>
+                    <p className="text-xs text-muted-foreground">{role === "admin" ? "Administrador" : "Operador"}</p>
+                  </div>
+                  <button className="ghost" onClick={() => signOut()}>Sair</button>
+                </>
+              ) : (
+                <Link to="/auth" className="primary">Entrar</Link>
+              )}
+            </div>
+          </div>
           <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.18em] text-primary">
             Obra mais previsível
           </p>
@@ -423,12 +442,14 @@ function Calculadora() {
             <div className="rounded-2xl border border-border bg-card p-6 print:hidden">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
                 <h2 className="min-w-0 text-xl font-bold tracking-tight">Catálogo de modelos</h2>
-                <button className="primary shrink-0" onClick={() => setShowRegister((v) => !v)}>
-                  {showRegister ? "Fechar cadastro" : "Cadastrar modelo"}
-                </button>
+                {isAdmin && (
+                  <button className="primary shrink-0" onClick={() => setShowRegister((v) => !v)}>
+                    {showRegister ? "Fechar cadastro" : "Cadastrar modelo"}
+                  </button>
+                )}
               </div>
 
-              {showRegister && (
+              {isAdmin && showRegister && (
                 <div className="mt-5 rounded-xl border border-border p-4">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <Field label="Modelo"><input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex.: Porcelanato Urban" /></Field>
@@ -491,34 +512,38 @@ function Calculadora() {
                       {m.requiresUnderlayment ? " • com manta" : ""}
                     </p>
                     <div className="mt-3 flex gap-2">
-                      <button className="ghost" onClick={() => startEdit(m)}>Alterar</button>
-                      <button
-                        className="ghost"
-                        onClick={() => {
-                          if (confirm(`Excluir o modelo "${m.name}"?`)) {
-                            deleteModel(m.id).catch(() => {
-                              setStatus("Não foi possível excluir o modelo. Tente novamente.");
-                            });
-                          }
-                        }}
-                      >
-                        Excluir
-                      </button>
+                      {isAdmin && <button className="ghost" onClick={() => startEdit(m)}>Alterar</button>}
+                      {isAdmin && (
+                        <button
+                          className="ghost"
+                          onClick={() => {
+                            if (confirm(`Excluir o modelo "${m.name}"?`)) {
+                              deleteModel(m.id).catch(() => {
+                                setStatus("Não foi possível excluir o modelo. Tente novamente.");
+                              });
+                            }
+                          }}
+                        >
+                          Excluir
+                        </button>
+                      )}
                       <button className="ghost" onClick={() => setModelId(m.id)}>Usar</button>
                     </div>
                   </div>
                 ))}
               </div>
-              <button
-                className="ghost mt-4"
-                onClick={() => {
-                  restoreDefaults()
-                    .then(() => setStatus("Modelos padrão restaurados."))
-                    .catch(() => setStatus("Não foi possível restaurar os modelos padrão."));
-                }}
-              >
-                Restaurar modelos padrão
-              </button>
+              {isAdmin && (
+                <button
+                  className="ghost mt-4"
+                  onClick={() => {
+                    restoreDefaults()
+                      .then(() => setStatus("Modelos padrão restaurados."))
+                      .catch(() => setStatus("Não foi possível restaurar os modelos padrão."));
+                  }}
+                >
+                  Restaurar modelos padrão
+                </button>
+              )}
             </div>
 
             <p className="text-xs text-muted-foreground print-note">

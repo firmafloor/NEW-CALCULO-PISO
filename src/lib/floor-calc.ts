@@ -49,6 +49,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 2.77,
     pricePerBox: 219.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "elegance",
@@ -62,6 +63,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 3.87,
     pricePerBox: 289.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "magnifique",

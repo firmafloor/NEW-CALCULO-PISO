@@ -191,8 +191,7 @@ function Calculadora() {
       thickness: String(m.thickness),
       piecesPerBox: String(m.piecesPerBox),
       yieldPerBox: String(m.yieldPerBox),
-      pricePerBox: String(m.pricePerBox),
-      boxUnit: m.boxUnit,
+            boxUnit: m.boxUnit,
       requiresUnderlayment: m.requiresUnderlayment ?? false,
     });
     setStatus("Edite os dados e salve as alterações.");

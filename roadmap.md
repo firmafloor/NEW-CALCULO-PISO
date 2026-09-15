@@ -10,3 +10,9 @@
 - [x] Catálogo online: listar, cadastrar, editar, excluir e restaurar modelos
 - [x] Fabricante exibido na seleção, detalhes e catálogo
 - [x] Rodapé calculado por `Math.ceil((área / 2,4) × 1,25)` peças
+- [ ] Autenticação por e-mail: cadastro, confirmação, login, recuperação e logout
+- [ ] Perfis completos e funções separadas de administrador e operador
+- [ ] Primeiro acesso definido como administrador; acessos seguintes como operador
+- [ ] Gestão de modelos visível e permitida somente para administradores
+- [ ] Calculadora, impressão e exportação disponíveis sem login e para operadores
+- [ ] Fluxos de acesso, permissões e visual responsivo validados

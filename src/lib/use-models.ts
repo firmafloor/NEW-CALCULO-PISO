@@ -34,7 +34,11 @@ const toRow = (model: FloorModel): TablesInsert<"floor_models"> => ({
   yield_per_box: model.yieldPerBox,
   price_per_box: model.pricePerBox,
   box_unit: model.boxUnit,
-  requires_underlayment: model.requiresUnderlayment ?? false,
+    requires_underlayment: model.requiresUnderlayment ?? false,
+  include_leveling_compound: model.includeLevelingCompound ?? true,
+  include_lvt_adhesive: model.includeLvtAdhesive ?? true,
+  include_preparation_compound: model.includePreparationCompound ?? true,
+  include_planiprep: model.includePlaniprep ?? true,
   is_deleted: false,
 });
 

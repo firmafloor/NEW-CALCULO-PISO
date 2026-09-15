@@ -54,7 +54,7 @@ function decodeJwtPayload(token: string): JwtPayload | null {
 function claimsFromUser(user: User): AuthClaims {
   return {
     sub: user.id,
-    email: user.email,
+    ...(user.email ? { email: user.email } : {}),
     user_metadata: user.user_metadata,
   };
 }

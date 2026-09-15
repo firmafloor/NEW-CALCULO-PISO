@@ -242,8 +242,8 @@ function Calculadora() {
                 onChange={(e) => setModelId(e.target.value)}
               >
                 {models.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
+                                    <option key={m.id} value={m.id}>
+                    {m.name} — {m.manufacturer}
                   </option>
                 ))}
               </select>

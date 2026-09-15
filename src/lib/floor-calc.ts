@@ -17,6 +17,8 @@ export type FloorModel = {
   pricePerBox: number;
   /** unidade de venda: caixas / pacotes */
   boxUnit: string;
+  /** indica se o modelo requer manta de instalação */
+  requiresUnderlayment?: boolean;
   custom?: boolean;
 };
 
@@ -33,6 +35,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 2.36,
     pricePerBox: 189.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "evidence",
@@ -46,6 +49,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 2.77,
     pricePerBox: 219.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "elegance",
@@ -59,6 +63,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 3.87,
     pricePerBox: 289.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "magnifique",
@@ -135,30 +140,12 @@ export type CalcInput = {
   perimeter: number;
   /** margem de perda/recortes em % */
   wastePct: number;
-  /** junta de assentamento em mm */
-  groutJoint: number;
-  /** consumo de argamassa kg/m² */
-  mortarRate: number;
-  /** peso do saco de argamassa em kg */
-  mortarBag: number;
-  /** preço do saco de argamassa */
-  mortarPrice: number;
-  /** peso da embalagem de rejunte em kg */
-  groutPack: number;
-  /** preço da embalagem de rejunte */
-  groutPrice: number;
   /** incluir rodapé */
   includeBaseboard: boolean;
   /** comprimento da barra de rodapé em m */
   baseboardBar: number;
-  /** preço da barra de rodapé */
-  baseboardPrice: number;
   /** peças de rodapé por tubo de cola PU */
   piecesPerTube: number;
-  /** preço do tubo de cola PU */
-  tubePrice: number;
-  /** mão de obra por m² */
-  laborRate: number;
 };
 
 export type CostRow = {
@@ -169,8 +156,6 @@ export type CostRow = {
   exact: number;
   unit: string;
   formula: string;
-  unitPrice: number;
-  total: number;
 };
 
 export type CalcResult = {
@@ -182,23 +167,13 @@ export type CalcResult = {
   pieces: number;
   purchasedArea: number;
   leftover: number;
-  mortarKg: number;
-  mortarExact: number;
-  mortarBags: number;
-  groutRate: number;
-  groutKg: number;
-  groutExact: number;
-  groutPacks: number;
+  underlaymentArea: number;
   perimeterUsed: number;
   baseboardExact: number;
   baseboardBars: number;
   tubesExact: number;
   tubes: number;
   rows: CostRow[];
-  materialsTotal: number;
-  laborTotal: number;
-  grandTotal: number;
-  costPerSqm: number;
 };
 
 const ceil = (v: number) => Math.ceil(Number((v || 0).toFixed(6)));
@@ -208,18 +183,9 @@ export function calculate(input: CalcInput): CalcResult {
     model,
     area,
     wastePct,
-    groutJoint,
-    mortarRate,
-    mortarBag,
-    mortarPrice,
-    groutPack,
-    groutPrice,
     includeBaseboard,
     baseboardBar,
-    baseboardPrice,
     piecesPerTube,
-    tubePrice,
-    laborRate,
   } = input;
 
   const factor = 1 + wastePct / 100;
@@ -233,21 +199,7 @@ export function calculate(input: CalcInput): CalcResult {
   const purchasedArea = boxes * model.yieldPerBox;
   const leftover = purchasedArea - areaWithWaste;
 
-  const mortarKg = areaWithWaste * mortarRate;
-  const mortarExact = mortarBag > 0 ? mortarKg / mortarBag : 0;
-  const mortarBags = ceil(mortarExact);
-
-  // consumo de rejunte (kg/m²) = ((C+L) / (C×L)) × espessura(cm) × junta(mm) × 1,6
-  const groutRate =
-    model.length > 0 && model.width > 0
-      ? ((model.length + model.width) / (model.length * model.width)) *
-        (model.thickness / 10) *
-        groutJoint *
-        1.6
-      : 0;
-  const groutKg = groutRate * areaWithWaste;
-  const groutExact = groutPack > 0 ? groutKg / groutPack : 0;
-  const groutPacks = groutKg > 0 ? ceil(groutExact) : 0;
+  const underlaymentArea = model.requiresUnderlayment ? area : 0;
 
   const perimeterUsed = input.perimeter > 0 ? input.perimeter : 4 * Math.sqrt(Math.max(area, 0));
   const baseboardExact =
@@ -263,8 +215,6 @@ export function calculate(input: CalcInput): CalcResult {
       exact: exactBoxes,
       unit: model.boxUnit,
       formula: `${fmt(area)} m² × ${fmt(factor)} = ${fmt(areaWithWaste)} m² ÷ ${fmt(model.yieldPerBox)} m² = ${fmt(exactBoxes)} → ${boxes}`,
-      unitPrice: model.pricePerBox,
-      total: boxes * model.pricePerBox,
     },
     {
       name: "Peças de piso",
@@ -272,29 +222,16 @@ export function calculate(input: CalcInput): CalcResult {
       exact: pieces,
       unit: "peças",
       formula: `${boxes} ${model.boxUnit} × ${model.piecesPerBox} peças`,
-      unitPrice: 0,
-      total: 0,
-    },
-    {
-      name: `Argamassa / cola (saco ${fmt(mortarBag, 0)} kg)`,
-      qty: mortarBags,
-      exact: mortarExact,
-      unit: "sacos",
-      formula: `${fmt(areaWithWaste)} m² × ${fmt(mortarRate)} kg/m² = ${fmt(mortarKg)} kg ÷ ${fmt(mortarBag, 0)} kg = ${fmt(mortarExact)} → ${mortarBags}`,
-      unitPrice: mortarPrice,
-      total: mortarBags * mortarPrice,
     },
   ];
 
-  if (groutPacks > 0) {
+  if (model.requiresUnderlayment) {
     rows.push({
-      name: `Rejunte / nivelante (${fmt(groutPack, 0)} kg)`,
-      qty: groutPacks,
-      exact: groutExact,
-      unit: "embalagens",
-      formula: `consumo ${fmt(groutRate, 3)} kg/m² × ${fmt(areaWithWaste)} m² = ${fmt(groutKg)} kg ÷ ${fmt(groutPack, 0)} kg = ${fmt(groutExact)} → ${groutPacks}`,
-      unitPrice: groutPrice,
-      total: groutPacks * groutPrice,
+      name: "Manta / base de instalação",
+      qty: ceil(underlaymentArea),
+      exact: underlaymentArea,
+      unit: "m²",
+      formula: "igual à área do ambiente",
     });
   }
 
@@ -305,8 +242,6 @@ export function calculate(input: CalcInput): CalcResult {
       exact: baseboardExact,
       unit: "barras",
       formula: `(${fmt(perimeterUsed)} m × 1,10) ÷ ${fmt(baseboardBar)} m = ${fmt(baseboardExact)} → ${baseboardBars}`,
-      unitPrice: baseboardPrice,
-      total: baseboardBars * baseboardPrice,
     });
     if (tubes > 0) {
       rows.push({
@@ -315,15 +250,9 @@ export function calculate(input: CalcInput): CalcResult {
         exact: tubesExact,
         unit: "tubos",
         formula: `${baseboardBars} barras ÷ ${fmt(piecesPerTube, 0)} por tubo = ${fmt(tubesExact)} → ${tubes}`,
-        unitPrice: tubePrice,
-        total: tubes * tubePrice,
       });
     }
   }
-
-  const materialsTotal = rows.reduce((s, r) => s + r.total, 0);
-  const laborTotal = laborRate * area;
-  const grandTotal = materialsTotal + laborTotal;
 
   return {
     areaWithWaste,
@@ -334,23 +263,13 @@ export function calculate(input: CalcInput): CalcResult {
     pieces,
     purchasedArea,
     leftover,
-    mortarKg,
-    mortarExact,
-    mortarBags,
-    groutRate,
-    groutKg,
-    groutExact,
-    groutPacks,
+    underlaymentArea,
     perimeterUsed,
     baseboardExact,
     baseboardBars,
     tubesExact,
     tubes,
     rows,
-    materialsTotal,
-    laborTotal,
-    grandTotal,
-    costPerSqm: area > 0 ? grandTotal / area : 0,
   };
 }
 

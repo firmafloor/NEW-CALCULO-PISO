@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  brl,
-  calculate,
+    calculate,
   fmt,
   type CalcInput,
   type FloorModel,

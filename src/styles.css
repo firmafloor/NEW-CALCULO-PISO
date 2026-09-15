@@ -63,25 +63,25 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.995 0.006 150);
-  --foreground: oklch(0.19 0.03 155);
-  --card: oklch(0.985 0.012 150);
-  --card-foreground: oklch(0.19 0.03 155);
+  --background: oklch(0.99 0.004 130);
+  --foreground: oklch(0.22 0.015 260);
+  --card: oklch(0.985 0.006 130);
+  --card-foreground: oklch(0.22 0.015 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.52 0.14 155);
-  --primary-foreground: oklch(0.99 0.01 150);
-  --secondary: oklch(0.95 0.03 150);
-  --secondary-foreground: oklch(0.3 0.06 155);
-  --muted: oklch(0.955 0.025 150);
-  --muted-foreground: oklch(0.48 0.03 155);
-  --accent: oklch(0.9 0.06 150);
-  --accent-foreground: oklch(0.3 0.06 155);
+  --popover-foreground: oklch(0.22 0.015 260);
+  --primary: oklch(0.68 0.18 132);
+  --primary-foreground: oklch(0.18 0.02 260);
+  --secondary: oklch(0.95 0.02 130);
+  --secondary-foreground: oklch(0.28 0.03 132);
+  --muted: oklch(0.955 0.015 130);
+  --muted-foreground: oklch(0.47 0.02 260);
+  --accent: oklch(0.92 0.05 132);
+  --accent-foreground: oklch(0.28 0.03 132);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.9 0.03 152);
-  --input: oklch(0.9 0.03 152);
-  --ring: oklch(0.52 0.14 155);
+  --border: oklch(0.89 0.02 130);
+  --input: oklch(0.89 0.02 130);
+  --ring: oklch(0.68 0.18 132);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -189,7 +189,86 @@
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
   body {
     background: #fff;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .print-header {
+    margin-bottom: 10px !important;
+  }
+
+  .print-logo {
+    height: 34px !important;
+  }
+
+  .print-title {
+    font-size: 20px !important;
+    margin-top: 4px !important;
+  }
+
+  .print-header p:first-of-type {
+    display: none;
+  }
+
+  .print-report {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    break-inside: avoid;
+  }
+
+  .print-section-title {
+    font-size: 15px !important;
+  }
+
+  .print-metrics {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+    margin-top: 8px !important;
+  }
+
+  .print-metric {
+    padding: 8px !important;
+    break-inside: avoid;
+  }
+
+  .print-metric-value {
+    font-size: 16px !important;
+  }
+
+  .print-subtitle {
+    margin-top: 12px !important;
+    font-size: 13px !important;
+  }
+
+  .print-table {
+    margin-top: 6px !important;
+    overflow: visible !important;
+    break-inside: avoid;
+  }
+
+  .print-table table {
+    min-width: 0 !important;
+    font-size: 10.5px !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    padding: 4px 6px !important;
+  }
+
+  .print-note {
+    margin-top: 10px !important;
+    font-size: 9px !important;
   }
 }

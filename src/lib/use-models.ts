@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_MODELS, type FloorModel } from "./floor-calc";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { useAuth } from "./auth-context";
 
 type FloorModelRow = Tables<"floor_models">;
 
@@ -38,6 +39,7 @@ const toRow = (model: FloorModel): TablesInsert<"floor_models"> => ({
 });
 
 export function useModels() {
+  const { isAdmin } = useAuth();
   const [models, setModels] = useState<FloorModel[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -69,21 +71,24 @@ export function useModels() {
   }, [loadModels]);
 
   const saveModel = useCallback(async (model: FloorModel) => {
+    if (!isAdmin) throw new Error("Apenas administradores podem alterar modelos.");
     const { error } = await supabase.from("floor_models").upsert(toRow(model));
     if (error) throw error;
     await loadModels();
-  }, [loadModels]);
+  }, [isAdmin, loadModels]);
 
   const deleteModel = useCallback(async (id: string) => {
+    if (!isAdmin) throw new Error("Apenas administradores podem excluir modelos.");
     const { error } = await supabase
       .from("floor_models")
       .update({ is_deleted: true })
       .eq("id", id);
     if (error) throw error;
     await loadModels();
-  }, [loadModels]);
+  }, [isAdmin, loadModels]);
 
   const restoreDefaults = useCallback(async () => {
+    if (!isAdmin) throw new Error("Apenas administradores podem restaurar modelos.");
     const defaults = DEFAULT_MODELS.map((model) => ({
       ...toRow(model),
       is_default: true,
@@ -91,7 +96,7 @@ export function useModels() {
     const { error } = await supabase.from("floor_models").upsert(defaults);
     if (error) throw error;
     await loadModels();
-  }, [loadModels]);
+  }, [isAdmin, loadModels]);
 
   return { models, saveModel, deleteModel, restoreDefaults, ready };
 }

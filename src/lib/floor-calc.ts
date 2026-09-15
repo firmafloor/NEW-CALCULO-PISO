@@ -162,6 +162,8 @@ export type CalcInput = {
   piecesPerTube: number;
   /** preço do tubo de cola PU */
   tubePrice: number;
+  /** preço da manta de instalação por m² */
+  underlaymentPrice: number;
   /** mão de obra por m² */
   laborRate: number;
 };
@@ -224,6 +226,7 @@ export function calculate(input: CalcInput): CalcResult {
     baseboardPrice,
     piecesPerTube,
     tubePrice,
+    underlaymentPrice,
     laborRate,
   } = input;
 

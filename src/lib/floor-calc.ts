@@ -290,7 +290,7 @@ export function calculate(input: CalcInput): CalcResult {
         qty: tubes,
         exact: tubesExact,
         unit: "tubos",
-        formula: `${baseboardBars} barras ÷ ${fmt(piecesPerTube, 0)} por tubo = ${fmt(tubesExact)} → ${tubes}`,
+                formula: `${fmt(baseboardExact)} barras ÷ ${fmt(piecesPerTube, 0)} por tubo = ${fmt(tubesExact)} → ${tubes}`,
       });
     }
   }

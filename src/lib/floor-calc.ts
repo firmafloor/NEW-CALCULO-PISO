@@ -208,7 +208,7 @@ export function calculate(input: CalcInput): CalcResult {
   const perimeterUsed = input.perimeter > 0 ? input.perimeter : 4 * Math.sqrt(Math.max(area, 0));
   const baseboardExact = includeBaseboard ? (area / 2.4) * 1.25 : 0;
   const baseboardBars = ceil(baseboardExact);
-  const tubesExact = includeBaseboard && piecesPerTube > 0 ? baseboardBars / piecesPerTube : 0;
+    const tubesExact = includeBaseboard && piecesPerTube > 0 ? baseboardExact / piecesPerTube : 0;
   const tubes = ceil(tubesExact);
 
   const rows: CostRow[] = [
@@ -290,7 +290,7 @@ export function calculate(input: CalcInput): CalcResult {
         qty: tubes,
         exact: tubesExact,
         unit: "tubos",
-        formula: `${baseboardBars} barras ÷ ${fmt(piecesPerTube, 0)} por tubo = ${fmt(tubesExact)} → ${tubes}`,
+                formula: `${fmt(baseboardExact)} barras ÷ ${fmt(piecesPerTube, 0)} por tubo = ${fmt(tubesExact)} → ${tubes}`,
       });
     }
   }

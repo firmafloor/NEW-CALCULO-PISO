@@ -7,3 +7,6 @@
 - [x] CSS de impressão: relatório em 1 página A4, botões/formulários ocultos, layout compacto
 - [x] Identidade FirmaFloor: logo no cabeçalho e na impressão; paleta verde + grafite; favicon
 - [x] Build OK e preview validado
+- [x] Catálogo online: listar, cadastrar, editar, excluir e restaurar modelos
+- [x] Fabricante exibido na seleção, detalhes e catálogo
+- [x] Rodapé calculado por `Math.ceil((área / 2,4) × 1,25)` peças

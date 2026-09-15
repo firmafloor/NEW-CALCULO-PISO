@@ -18,7 +18,11 @@ const fromRow = (row: FloorModelRow): FloorModel => ({
   yieldPerBox: row.yield_per_box,
   pricePerBox: row.price_per_box,
   boxUnit: row.box_unit,
-  requiresUnderlayment: row.requires_underlayment,
+    requiresUnderlayment: row.requires_underlayment,
+  includeLevelingCompound: row.include_leveling_compound,
+  includeLvtAdhesive: row.include_lvt_adhesive,
+  includePreparationCompound: row.include_preparation_compound,
+  includePlaniprep: row.include_planiprep,
   custom: !row.is_default,
 });
 

@@ -49,7 +49,11 @@ export function useModels() {
       .order("created_at");
 
     if (error) throw error;
-    setModels((data ?? []).map(fromRow));
+        setModels(
+      (data ?? [])
+        .map(fromRow)
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })),
+    );
   }, []);
 
   useEffect(() => {

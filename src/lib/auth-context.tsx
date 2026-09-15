@@ -33,6 +33,23 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function isInvalidCachedSession(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const status = "status" in error && typeof error.status === "number" ? error.status : 0;
+  const message = "message" in error && typeof error.message === "string" ? error.message : "";
+  return (
+    status === 400 ||
+    status === 401 ||
+    status === 403 ||
+    /invalid.*(jwt|token)|jwt.*(expired|invalid)|refresh.*token|session.*missing/i.test(message)
+  );
+}
+
+async function clearInvalidCachedSession(error: unknown) {
+  if (!isInvalidCachedSession(error)) return;
+  await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+}
+
 export function AuthProvider({
   queryClient,
   children,
@@ -64,6 +81,7 @@ export function AuthProvider({
     async (displayName?: string) => {
       const { data, error } = await supabase.auth.getUser();
       if (error || !data.user) {
+        await clearInvalidCachedSession(error);
         setUser(null);
         setProfile(null);
         setRole(null);
@@ -78,8 +96,9 @@ export function AuthProvider({
 
   useEffect(() => {
     let active = true;
-    supabase.auth.getUser().then(async ({ data }) => {
+    supabase.auth.getUser().then(async ({ data, error }) => {
       if (!active) return;
+      if (error) await clearInvalidCachedSession(error);
       if (data.user) {
         try {
           await loadAccess(data.user);

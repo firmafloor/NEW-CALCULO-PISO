@@ -152,24 +152,12 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
     let claims: AuthClaims | null = null;
     let supabase: ReturnType<typeof createAuthenticatedClient> | null = null;
     let receivedDefinitiveRejection = false;
+    let receivedTemporaryFailure = false;
 
     for (const connection of authConnections(payload)) {
       const candidateClient = createAuthenticatedClient(connection, token);
 
-      try {
-        const { data, error } = await candidateClient.auth.getClaims(token);
-        const candidate = data?.claims;
-        if (!error && candidate && typeof candidate.sub === "string") {
-          claims = candidate as AuthClaims;
-          supabase = candidateClient;
-          break;
-        }
-        receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
-      } catch (error) {
-        receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
-      }
-
-      for (let attempt = 1; !claims && attempt <= 2; attempt += 1) {
+      for (let attempt = 1; !claims && attempt <= 3; attempt += 1) {
         try {
           const { data, error } = await candidateClient.auth.getUser(token);
           if (!error && data.user) {
@@ -178,13 +166,15 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
             break;
           }
           receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
+          receivedTemporaryFailure ||= Boolean(error) && !isDefinitiveAuthError(error);
           if (isDefinitiveAuthError(error)) break;
         } catch (error) {
           receivedDefinitiveRejection ||= isDefinitiveAuthError(error);
+          receivedTemporaryFailure ||= !isDefinitiveAuthError(error);
           if (isDefinitiveAuthError(error)) break;
         }
 
-        if (attempt < 2) await waitForRetry(attempt);
+        if (attempt < 3) await waitForRetry(attempt);
       }
 
       if (claims) break;
@@ -192,9 +182,11 @@ export const requireProjectAuth = createMiddleware({ type: "function" }).server(
 
     if (!claims || !supabase) {
       throw new Error(
-        receivedDefinitiveRejection
-          ? "Unauthorized: Invalid token"
-          : "Authentication service temporarily unavailable",
+        receivedTemporaryFailure
+          ? "Authentication service temporarily unavailable"
+          : receivedDefinitiveRejection
+            ? "Unauthorized: Invalid token"
+            : "Authentication service temporarily unavailable",
       );
     }
 

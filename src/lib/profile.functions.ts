@@ -23,17 +23,39 @@ export const initializeProfile = createServerFn({ method: "POST" })
         ? userMetadata["display_name"]
         : "";
 
+    const displayName = data.displayName || metadataDisplayName;
+    const avatarUrl = data.avatarUrl || "";
+    const { data: authenticatedRole, error: authenticatedInitializeError } =
+      await context.supabase.rpc(
+      "initialize_user_profile",
+      {
+        _user_id: context.userId,
+        _email: email,
+        _display_name: displayName,
+        _avatar_url: avatarUrl,
+      },
+    );
+
+    if (!authenticatedInitializeError) {
+      const { data: profile, error: profileError } = await context.supabase
+        .from("profiles")
+        .select("display_name, avatar_url, preferences")
+        .eq("id", context.userId)
+        .single();
+      if (!profileError && profile) return { role: authenticatedRole, profile };
+    }
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: role, error: initializeError } = await supabaseAdmin.rpc(
       "initialize_user_profile",
       {
         _user_id: context.userId,
         _email: email,
-        _display_name: data.displayName || metadataDisplayName,
-        _avatar_url: data.avatarUrl || "",
+        _display_name: displayName,
+        _avatar_url: avatarUrl,
       },
     );
-    if (initializeError) throw initializeError;
+    if (initializeError) throw authenticatedInitializeError || initializeError;
 
     const { data: profile, error: profileError } = await supabaseAdmin
       .from("profiles")

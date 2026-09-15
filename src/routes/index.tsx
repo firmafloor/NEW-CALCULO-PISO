@@ -48,7 +48,11 @@ const emptyForm = {
   piecesPerBox: "4",
   yieldPerBox: "1.44",
     boxUnit: "caixas",
-  requiresUnderlayment: false,
+    requiresUnderlayment: false,
+  includeLevelingCompound: true,
+  includeLvtAdhesive: true,
+  includePreparationCompound: true,
+  includePlaniprep: true,
 };
 
 function Calculadora() {
@@ -176,7 +180,11 @@ function Calculadora() {
       yieldPerBox: num(form.yieldPerBox),
             pricePerBox: editingId ? models.find((m) => m.id === editingId)?.pricePerBox ?? 0 : 0,
       boxUnit: form.boxUnit || "caixas",
-      requiresUnderlayment: form.requiresUnderlayment,
+            requiresUnderlayment: form.requiresUnderlayment,
+      includeLevelingCompound: form.includeLevelingCompound,
+      includeLvtAdhesive: form.includeLvtAdhesive,
+      includePreparationCompound: form.includePreparationCompound,
+      includePlaniprep: form.includePlaniprep,
       custom: true,
     };
     if (!parsed.name || parsed.yieldPerBox <= 0) {
@@ -207,7 +215,11 @@ function Calculadora() {
       piecesPerBox: String(m.piecesPerBox),
       yieldPerBox: String(m.yieldPerBox),
             boxUnit: m.boxUnit,
-      requiresUnderlayment: m.requiresUnderlayment ?? false,
+            requiresUnderlayment: m.requiresUnderlayment ?? false,
+      includeLevelingCompound: m.includeLevelingCompound ?? true,
+      includeLvtAdhesive: m.includeLvtAdhesive ?? true,
+      includePreparationCompound: m.includePreparationCompound ?? true,
+      includePlaniprep: m.includePlaniprep ?? true,
     });
     setStatus("Edite os dados e salve as alterações.");
   }
@@ -482,7 +494,23 @@ function Calculadora() {
                         checked={form.requiresUnderlayment}
                         onChange={(e) => setForm({ ...form, requiresUnderlayment: e.target.checked })}
                       />
-                      Requer manta de instalação
+                                            Requer manta de instalação
+                    </label>
+                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                      <input type="checkbox" checked={form.includeLevelingCompound} onChange={(e) => setForm({ ...form, includeLevelingCompound: e.target.checked })} />
+                      Incluir massa autonivelante
+                    </label>
+                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                      <input type="checkbox" checked={form.includeLvtAdhesive} onChange={(e) => setForm({ ...form, includeLvtAdhesive: e.target.checked })} />
+                      Incluir cola vinílica LVT
+                    </label>
+                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                      <input type="checkbox" checked={form.includePreparationCompound} onChange={(e) => setForm({ ...form, includePreparationCompound: e.target.checked })} />
+                      Incluir massa de preparação
+                    </label>
+                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                      <input type="checkbox" checked={form.includePlaniprep} onChange={(e) => setForm({ ...form, includePlaniprep: e.target.checked })} />
+                      Incluir massa Planiprep
                     </label>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">

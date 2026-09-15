@@ -17,8 +17,12 @@ export type FloorModel = {
   pricePerBox: number;
   /** unidade de venda: caixas / pacotes */
   boxUnit: string;
-  /** indica se o modelo requer manta de instalação */
+    /** indica se o modelo requer manta de instalação */
   requiresUnderlayment?: boolean;
+  includeLevelingCompound?: boolean;
+  includeLvtAdhesive?: boolean;
+  includePreparationCompound?: boolean;
+  includePlaniprep?: boolean;
   custom?: boolean;
 };
 

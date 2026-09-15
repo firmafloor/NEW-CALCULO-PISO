@@ -18,7 +18,11 @@ const fromRow = (row: FloorModelRow): FloorModel => ({
   yieldPerBox: row.yield_per_box,
   pricePerBox: row.price_per_box,
   boxUnit: row.box_unit,
-  requiresUnderlayment: row.requires_underlayment,
+    requiresUnderlayment: row.requires_underlayment,
+  includeLevelingCompound: row.include_leveling_compound,
+  includeLvtAdhesive: row.include_lvt_adhesive,
+  includePreparationCompound: row.include_preparation_compound,
+  includePlaniprep: row.include_planiprep,
   custom: !row.is_default,
 });
 
@@ -34,7 +38,11 @@ const toRow = (model: FloorModel): TablesInsert<"floor_models"> => ({
   yield_per_box: model.yieldPerBox,
   price_per_box: model.pricePerBox,
   box_unit: model.boxUnit,
-  requires_underlayment: model.requiresUnderlayment ?? false,
+    requires_underlayment: model.requiresUnderlayment ?? false,
+  include_leveling_compound: model.includeLevelingCompound ?? true,
+  include_lvt_adhesive: model.includeLvtAdhesive ?? true,
+  include_preparation_compound: model.includePreparationCompound ?? true,
+  include_planiprep: model.includePlaniprep ?? true,
   is_deleted: false,
 });
 

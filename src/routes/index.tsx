@@ -180,7 +180,11 @@ function Calculadora() {
       yieldPerBox: num(form.yieldPerBox),
             pricePerBox: editingId ? models.find((m) => m.id === editingId)?.pricePerBox ?? 0 : 0,
       boxUnit: form.boxUnit || "caixas",
-      requiresUnderlayment: form.requiresUnderlayment,
+            requiresUnderlayment: form.requiresUnderlayment,
+      includeLevelingCompound: form.includeLevelingCompound,
+      includeLvtAdhesive: form.includeLvtAdhesive,
+      includePreparationCompound: form.includePreparationCompound,
+      includePlaniprep: form.includePlaniprep,
       custom: true,
     };
     if (!parsed.name || parsed.yieldPerBox <= 0) {

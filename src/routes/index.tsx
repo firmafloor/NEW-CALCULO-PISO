@@ -48,7 +48,11 @@ const emptyForm = {
   piecesPerBox: "4",
   yieldPerBox: "1.44",
     boxUnit: "caixas",
-  requiresUnderlayment: false,
+    requiresUnderlayment: false,
+  includeLevelingCompound: true,
+  includeLvtAdhesive: true,
+  includePreparationCompound: true,
+  includePlaniprep: true,
 };
 
 function Calculadora() {

@@ -185,20 +185,29 @@ export function AuthProvider({
 
   const refreshAccess = useCallback(
     async (displayName?: string) => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const sessionUser = sessionData.session?.user;
+      if (sessionUser) {
+        const cached = readAccessCache(sessionUser.id);
+        if (cached) applyAccess(sessionUser, cached.role, cached.profile);
+      }
+
       const { data, error } = await supabase.auth.getUser();
       if (error || !data.user) {
         await clearInvalidCachedSession(error);
-        setUser(null);
-        setProfile(null);
-        setRole(null);
-        clearAccessCache();
+        if (isInvalidCachedSession(error) || !sessionUser) {
+          setUser(null);
+          setProfile(null);
+          setRole(null);
+          clearAccessCache();
+        }
         setReady(true);
         return;
       }
       await loadAccess(data.user, displayName);
       setReady(true);
     },
-    [loadAccess],
+    [applyAccess, loadAccess],
   );
 
   useEffect(() => {
@@ -217,7 +226,7 @@ export function AuthProvider({
       if (error) await clearInvalidCachedSession(error);
       if (data.user) {
         await loadAccess(data.user);
-      } else if (error) {
+      } else if (isInvalidCachedSession(error) || !sessionUser) {
         clearAccessCache();
         setUser(null);
         setProfile(null);

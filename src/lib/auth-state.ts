@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, type Context } from "react";
 import type { User } from "@supabase/supabase-js";
 
 export type AccessRole = "admin" | "operador";
@@ -19,7 +19,14 @@ export type AuthContextValue = {
   signOut: () => Promise<void>;
 };
 
-export const AuthContext = createContext<AuthContextValue | null>(null);
+const AUTH_CONTEXT_KEY = Symbol.for("firmafloor.auth-context");
+const globalContexts = globalThis as typeof globalThis & {
+  [AUTH_CONTEXT_KEY]?: Context<AuthContextValue | null>;
+};
+
+export const AuthContext =
+  globalContexts[AUTH_CONTEXT_KEY] ??
+  (globalContexts[AUTH_CONTEXT_KEY] = createContext<AuthContextValue | null>(null));
 
 export function useAuth() {
   const value = useContext(AuthContext);

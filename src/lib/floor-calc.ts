@@ -17,6 +17,8 @@ export type FloorModel = {
   pricePerBox: number;
   /** unidade de venda: caixas / pacotes */
   boxUnit: string;
+  /** indica se o modelo requer manta de instalação */
+  requiresUnderlayment?: boolean;
   custom?: boolean;
 };
 
@@ -33,6 +35,7 @@ export const DEFAULT_MODELS: FloorModel[] = [
     yieldPerBox: 2.36,
     pricePerBox: 189.9,
     boxUnit: "caixas",
+    requiresUnderlayment: true,
   },
   {
     id: "evidence",

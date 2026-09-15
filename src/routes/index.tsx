@@ -163,7 +163,7 @@ function Calculadora() {
       thickness: num(form.thickness),
       piecesPerBox: Math.max(1, Math.round(num(form.piecesPerBox))),
       yieldPerBox: num(form.yieldPerBox),
-      pricePerBox: num(form.pricePerBox),
+            pricePerBox: editingId ? models.find((m) => m.id === editingId)?.pricePerBox ?? 0 : 0,
       boxUnit: form.boxUnit || "caixas",
       requiresUnderlayment: form.requiresUnderlayment,
       custom: true,

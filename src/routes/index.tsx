@@ -251,6 +251,7 @@ function Calculadora() {
 
             {model && (
               <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl bg-muted p-3 text-xs">
+                                <Spec label="Fabricante" value={model.manufacturer} />
                 <Spec label="Dimensões" value={`${fmt(model.length)} × ${fmt(model.width)} cm`} />
                 <Spec label="Rendimento" value={`${fmt(model.yieldPerBox)} m²/${model.boxUnit.replace(/s$/, "")}`} />
                 <Spec label="Peças" value={`${model.piecesPerBox} / ${model.boxUnit.replace(/s$/, "")}`} />

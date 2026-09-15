@@ -124,8 +124,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      initialize_current_user_profile: {
-        Args: { _avatar_url?: string; _display_name?: string }
+      initialize_user_profile: {
+        Args: {
+          _avatar_url?: string
+          _display_name?: string
+          _email: string
+          _user_id: string
+        }
         Returns: Database["public"]["Enums"]["app_role"]
       }
     }

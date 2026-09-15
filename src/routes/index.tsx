@@ -237,7 +237,7 @@ function Calculadora() {
         <header className="mb-10 print-header">
           <div className="flex flex-wrap items-start justify-between gap-4 print:block">
             <img
-              src={logoAsset.url}
+                            src="/imagens/imagem-3b1a55fa.png"
               alt="FirmaFloor — Piso laminado vinílico e revestimentos"
               className="h-16 w-auto print-logo"
             />

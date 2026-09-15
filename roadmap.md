@@ -19,4 +19,4 @@
 - [x] Conexão com fallback no navegador e servidor, sem bloqueio por variáveis ausentes
 - [x] Permissões básicas do catálogo restauradas; regras de administrador continuam protegendo gravações
 - [x] Erro real de salvamento exibido no formulário e registrado no console
-- [ ] Validar cadastro e edição de modelos com a conta administradora autenticada
+- [x] Cadastro e edição validados com a conta administradora; lista recarrega os dados salvos

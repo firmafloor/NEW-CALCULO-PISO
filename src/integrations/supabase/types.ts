@@ -19,6 +19,10 @@ export type Database = {
           box_unit: string
           created_at: string
           id: string
+          include_leveling_compound: boolean
+          include_lvt_adhesive: boolean
+          include_planiprep: boolean
+          include_preparation_compound: boolean
           is_default: boolean
           is_deleted: boolean
           kind: string
@@ -37,6 +41,10 @@ export type Database = {
           box_unit?: string
           created_at?: string
           id: string
+          include_leveling_compound?: boolean
+          include_lvt_adhesive?: boolean
+          include_planiprep?: boolean
+          include_preparation_compound?: boolean
           is_default?: boolean
           is_deleted?: boolean
           kind?: string
@@ -55,6 +63,10 @@ export type Database = {
           box_unit?: string
           created_at?: string
           id?: string
+          include_leveling_compound?: boolean
+          include_lvt_adhesive?: boolean
+          include_planiprep?: boolean
+          include_preparation_compound?: boolean
           is_default?: boolean
           is_deleted?: boolean
           kind?: string

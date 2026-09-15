@@ -480,9 +480,7 @@ function Calculadora() {
                           {m.manufacturer} • {m.kind} • {fmt(m.length)}×{fmt(m.width)} cm
                         </p>
                       </div>
-                      <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                        {brl(m.pricePerBox)}
-                      </span>
+                      
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
                       {fmt(m.yieldPerBox)} m² por {m.boxUnit.replace(/s$/, "")} • {m.piecesPerBox} peças

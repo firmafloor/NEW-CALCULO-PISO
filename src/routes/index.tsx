@@ -47,8 +47,7 @@ const emptyForm = {
   thickness: "9",
   piecesPerBox: "4",
   yieldPerBox: "1.44",
-  pricePerBox: "0",
-  boxUnit: "caixas",
+    boxUnit: "caixas",
   requiresUnderlayment: false,
 };
 

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth-state";
 import logoAsset from "@/assets/firmafloor-logo.png.asset.json";
 
 export const Route = createFileRoute("/perfil")({

@@ -1,9 +1,7 @@
 import { useServerFn } from "@tanstack/react-start";
 import type { User } from "@supabase/supabase-js";
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -12,26 +10,7 @@ import {
 import type { QueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { initializeProfile } from "@/lib/profile.functions";
-
-export type AccessRole = "admin" | "operador";
-
-type Profile = {
-  displayName: string;
-  avatarUrl: string | null;
-  preferences: unknown;
-};
-
-type AuthContextValue = {
-  user: User | null;
-  profile: Profile | null;
-  role: AccessRole | null;
-  ready: boolean;
-  isAdmin: boolean;
-  refreshAccess: (displayName?: string) => Promise<void>;
-  signOut: () => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext, type AccessRole, type Profile } from "@/lib/auth-state";
 
 function isInvalidCachedSession(error: unknown) {
   if (!error || typeof error !== "object") return false;
@@ -148,10 +127,4 @@ export function AuthProvider({
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const value = useContext(AuthContext);
-  if (!value) throw new Error("useAuth must be used inside AuthProvider");
-  return value;
 }

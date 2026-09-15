@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_MODELS, type FloorModel } from "./floor-calc";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
-import { useAuth } from "./auth-context";
+import { useAuth } from "./auth-state";
 
 type FloorModelRow = Tables<"floor_models">;
 

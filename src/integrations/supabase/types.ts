@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      floor_models: {
+        Row: {
+          box_unit: string
+          created_at: string
+          id: string
+          is_default: boolean
+          is_deleted: boolean
+          kind: string
+          length: number
+          manufacturer: string
+          name: string
+          pieces_per_box: number
+          price_per_box: number
+          requires_underlayment: boolean
+          thickness: number
+          updated_at: string
+          width: number
+          yield_per_box: number
+        }
+        Insert: {
+          box_unit?: string
+          created_at?: string
+          id: string
+          is_default?: boolean
+          is_deleted?: boolean
+          kind?: string
+          length: number
+          manufacturer?: string
+          name: string
+          pieces_per_box: number
+          price_per_box?: number
+          requires_underlayment?: boolean
+          thickness: number
+          updated_at?: string
+          width: number
+          yield_per_box: number
+        }
+        Update: {
+          box_unit?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          is_deleted?: boolean
+          kind?: string
+          length?: number
+          manufacturer?: string
+          name?: string
+          pieces_per_box?: number
+          price_per_box?: number
+          requires_underlayment?: boolean
+          thickness?: number
+          updated_at?: string
+          width?: number
+          yield_per_box?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

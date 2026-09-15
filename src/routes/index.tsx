@@ -7,7 +7,7 @@ import {
   type FloorModel,
 } from "@/lib/floor-calc";
 import { useModels } from "@/lib/use-models";
-import logoAsset from "@/assets/firmafloor-logo.png.asset.json";
+
 import { useAuth } from "@/lib/auth-state";
 
 export const Route = createFileRoute("/")({

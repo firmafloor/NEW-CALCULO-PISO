@@ -238,36 +238,42 @@ export function calculate(input: CalcInput): CalcResult {
     });
   }
 
-    rows.push(
-    {
+        if (model.includeLevelingCompound ?? true) {
+    rows.push({
       name: "Massa autonivelante",
       qty: ceil(area / 5),
       exact: area / 5,
       unit: "sacos de 20 kg",
       formula: `${fmt(area)} m² ÷ 5 m² por saco = ${fmt(area / 5)} → ${ceil(area / 5)}`,
-    },
-    {
+    });
+  }
+  if (model.includeLvtAdhesive ?? true) {
+    rows.push({
       name: "Cola vinílica LVT",
       qty: ceil(area / 3.75),
       exact: area / 3.75,
       unit: "kg",
       formula: `${fmt(area)} m² ÷ 3,75 m²/kg = ${fmt(area / 3.75)} → ${ceil(area / 3.75)} kg`,
-    },
-    {
+    });
+  }
+  if (model.includePreparationCompound ?? true) {
+    rows.push({
       name: "Massa de preparação",
       qty: ceil(area / 8),
       exact: area / 8,
       unit: "sacos de 10 kg",
       formula: `${fmt(area)} m² ÷ 8 m² por saco = ${fmt(area / 8)} → ${ceil(area / 8)}`,
-    },
-    {
+    });
+  }
+  if (model.includePlaniprep ?? true) {
+    rows.push({
       name: "Massa Planiprep",
       qty: ceil(area / 8),
       exact: area / 8,
       unit: "sacos de 4 kg",
       formula: `${fmt(area)} m² ÷ 8 m² por saco = ${fmt(area / 8)} → ${ceil(area / 8)}`,
-    },
-  );
+    });
+  }
 
   if (includeBaseboard) {
 

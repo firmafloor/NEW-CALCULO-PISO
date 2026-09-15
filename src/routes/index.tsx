@@ -77,6 +77,16 @@ function Calculadora() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
+    const preferences = profile?.preferences;
+    if (!preferences || typeof preferences !== "object" || !("defaultWaste" in preferences)) return;
+    const preferredWaste = Number(preferences.defaultWaste);
+    if (Number.isFinite(preferredWaste) && preferredWaste >= 0 && preferredWaste <= 60) {
+      setWastePct(preferredWaste);
+      setCustomWaste(!WASTE_PRESETS.some((preset) => preset.value === preferredWaste));
+    }
+  }, [profile]);
+
+  useEffect(() => {
     if (ready && models.length && !models.some((m) => m.id === modelId)) {
       setModelId(models[0]!.id);
     }

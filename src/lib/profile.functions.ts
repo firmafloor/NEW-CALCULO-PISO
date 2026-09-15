@@ -19,8 +19,8 @@ export const initializeProfile = createServerFn({ method: "POST" })
         ? context.claims.user_metadata
         : {};
     const metadataDisplayName =
-      "display_name" in userMetadata && typeof userMetadata.display_name === "string"
-        ? userMetadata.display_name
+      "display_name" in userMetadata && typeof userMetadata["display_name"] === "string"
+        ? userMetadata["display_name"]
         : "";
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

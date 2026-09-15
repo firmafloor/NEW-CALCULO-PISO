@@ -26,3 +26,4 @@
 - [x] Remover a chamada `getClaims` e validar a sessão por `getUser` com repetição curta
 - [x] Inicializar perfil e papel primeiro com a sessão autenticada, sem depender da chave administrativa
 - [x] Limpar silenciosamente sessões antigas ou inválidas armazenadas no navegador
+- [x] Estabilizar o contexto de autenticação para impedir tela branca após atualizações da aplicação

@@ -202,8 +202,7 @@ export function calculate(input: CalcInput): CalcResult {
   const underlaymentArea = model.requiresUnderlayment ? area : 0;
 
   const perimeterUsed = input.perimeter > 0 ? input.perimeter : 4 * Math.sqrt(Math.max(area, 0));
-  const baseboardExact =
-    includeBaseboard && baseboardBar > 0 ? (perimeterUsed * 1.1) / baseboardBar : 0;
+    const baseboardExact = includeBaseboard ? (area / 2.4) * 1.25 : 0;
   const baseboardBars = ceil(baseboardExact);
   const tubesExact = includeBaseboard && piecesPerTube > 0 ? baseboardBars / piecesPerTube : 0;
   const tubes = ceil(tubesExact);
@@ -241,7 +240,7 @@ export function calculate(input: CalcInput): CalcResult {
       qty: baseboardBars,
       exact: baseboardExact,
       unit: "barras",
-      formula: `(${fmt(perimeterUsed)} m × 1,10) ÷ ${fmt(baseboardBar)} m = ${fmt(baseboardExact)} → ${baseboardBars}`,
+            formula: `(${fmt(area)} m² ÷ 2,4) × 1,25 = ${fmt(baseboardExact)} → ${baseboardBars}`, 
     });
     if (tubes > 0) {
       rows.push({

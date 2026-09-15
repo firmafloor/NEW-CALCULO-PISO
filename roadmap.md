@@ -22,3 +22,4 @@
 - [x] Cadastro e edição validados com a conta administradora; lista recarrega os dados salvos
 - [x] Corrigir a validação do token no login com fallback seguro para a conta autenticada
 - [x] Validar login, inicialização do perfil e navegação para a calculadora no cliente e servidor
+- [x] Corrigir na Vercel a validação do token contra o mesmo ambiente emissor, com repetição segura para falhas transitórias

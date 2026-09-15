@@ -444,8 +444,7 @@ function Calculadora() {
                     >
                       <input className="input" type="number" step="0.01" value={form.yieldPerBox} onChange={(e) => setForm({ ...form, yieldPerBox: e.target.value })} />
                     </Field>
-                    <Field label="Preço por caixa (R$)"><input className="input" type="number" step="0.01" value={form.pricePerBox} onChange={(e) => setForm({ ...form, pricePerBox: e.target.value })} /></Field>
-                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                                        <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
                       <input
                         type="checkbox"
                         checked={form.requiresUnderlayment}

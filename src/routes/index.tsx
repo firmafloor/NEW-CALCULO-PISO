@@ -47,8 +47,7 @@ const emptyForm = {
   thickness: "9",
   piecesPerBox: "4",
   yieldPerBox: "1.44",
-  pricePerBox: "0",
-  boxUnit: "caixas",
+    boxUnit: "caixas",
   requiresUnderlayment: false,
 };
 
@@ -164,7 +163,7 @@ function Calculadora() {
       thickness: num(form.thickness),
       piecesPerBox: Math.max(1, Math.round(num(form.piecesPerBox))),
       yieldPerBox: num(form.yieldPerBox),
-      pricePerBox: num(form.pricePerBox),
+            pricePerBox: editingId ? models.find((m) => m.id === editingId)?.pricePerBox ?? 0 : 0,
       boxUnit: form.boxUnit || "caixas",
       requiresUnderlayment: form.requiresUnderlayment,
       custom: true,
@@ -192,8 +191,7 @@ function Calculadora() {
       thickness: String(m.thickness),
       piecesPerBox: String(m.piecesPerBox),
       yieldPerBox: String(m.yieldPerBox),
-      pricePerBox: String(m.pricePerBox),
-      boxUnit: m.boxUnit,
+            boxUnit: m.boxUnit,
       requiresUnderlayment: m.requiresUnderlayment ?? false,
     });
     setStatus("Edite os dados e salve as alterações.");
@@ -444,8 +442,7 @@ function Calculadora() {
                     >
                       <input className="input" type="number" step="0.01" value={form.yieldPerBox} onChange={(e) => setForm({ ...form, yieldPerBox: e.target.value })} />
                     </Field>
-                    <Field label="Preço por caixa (R$)"><input className="input" type="number" step="0.01" value={form.pricePerBox} onChange={(e) => setForm({ ...form, pricePerBox: e.target.value })} /></Field>
-                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                                        <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
                       <input
                         type="checkbox"
                         checked={form.requiresUnderlayment}

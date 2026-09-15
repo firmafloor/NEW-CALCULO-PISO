@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireProjectAuth } from "@/lib/project-auth-middleware";
 
 export const initializeProfile = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireProjectAuth])
   .inputValidator((data) =>
     z
       .object({

@@ -16,4 +16,5 @@
 - [x] Gestão de modelos visível e permitida somente para administradores
 - [x] Calculadora, impressão e exportação disponíveis sem login e para operadores
 - [x] Fluxos públicos, bloqueio de escrita anônima e visual responsivo validados
+- [x] Conexão com fallback no navegador e servidor, sem bloqueio por variáveis ausentes
 - [ ] Fluxos autenticados de administrador e operador aguardam o primeiro cadastro confirmado

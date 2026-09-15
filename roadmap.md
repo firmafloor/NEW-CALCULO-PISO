@@ -17,4 +17,6 @@
 - [x] Calculadora, impressão e exportação disponíveis sem login e para operadores
 - [x] Fluxos públicos, bloqueio de escrita anônima e visual responsivo validados
 - [x] Conexão com fallback no navegador e servidor, sem bloqueio por variáveis ausentes
-- [ ] Fluxos autenticados de administrador e operador aguardam o primeiro cadastro confirmado
+- [x] Permissões básicas do catálogo restauradas; regras de administrador continuam protegendo gravações
+- [x] Erro real de salvamento exibido no formulário e registrado no console
+- [ ] Validar cadastro e edição de modelos com a conta administradora autenticada

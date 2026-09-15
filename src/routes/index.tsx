@@ -197,8 +197,10 @@ function Calculadora() {
       setStatus(editingId ? "Modelo atualizado." : "Modelo cadastrado com sucesso.");
       setForm(emptyForm);
       setEditingId(null);
-    } catch {
-      setStatus("Não foi possível salvar o modelo. Tente novamente.");
+    } catch (error) {
+      console.error(error);
+      const message = error instanceof Error ? error.message : String(error);
+      setStatus(`Não foi possível salvar o modelo. Tente novamente. ${message}`);
     }
   }
 

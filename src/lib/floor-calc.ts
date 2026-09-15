@@ -241,7 +241,7 @@ export function calculate(input: CalcInput): CalcResult {
       qty: baseboardBars,
       exact: baseboardExact,
       unit: "barras",
-      formula: `(${fmt(perimeterUsed)} m × 1,10) ÷ ${fmt(baseboardBar)} m = ${fmt(baseboardExact)} → ${baseboardBars}`,
+            formula: `(${fmt(area)} m² ÷ 2,4) × 1,25 = ${fmt(baseboardExact)} → ${baseboardBars}`, 
     });
     if (tubes > 0) {
       rows.push({

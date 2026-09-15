@@ -20,5 +20,5 @@
 - [x] Permissões básicas do catálogo restauradas; regras de administrador continuam protegendo gravações
 - [x] Erro real de salvamento exibido no formulário e registrado no console
 - [x] Cadastro e edição validados com a conta administradora; lista recarrega os dados salvos
-- [ ] Corrigir a validação do token no login com fallback seguro para a conta autenticada
-- [ ] Validar login, inicialização do perfil e navegação para a calculadora no cliente e servidor
+- [x] Corrigir a validação do token no login com fallback seguro para a conta autenticada
+- [x] Validar login, inicialização do perfil e navegação para a calculadora no cliente e servidor

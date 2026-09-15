@@ -99,7 +99,12 @@ function AuthPage() {
             </Field>
             {mode !== "forgot" && (
               <Field label="Senha">
-                <input className="input" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
+                                <span className="relative block">
+                  <input className="input pr-10" type={showPassword ? "text" : "password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
+                  <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Ocultar senha" : "Visualizar senha"}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </span>
               </Field>
             )}
             <button className="primary mt-6 w-full" type="submit" disabled={busy}>

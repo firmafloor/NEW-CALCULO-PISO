@@ -27,11 +27,7 @@ export type Database = {
           name: string
           pieces_per_box: number
           price_per_box: number
-                    requires_underlayment: boolean
-          include_leveling_compound: boolean
-          include_lvt_adhesive: boolean
-          include_preparation_compound: boolean
-          include_planiprep: boolean
+          requires_underlayment: boolean
           thickness: number
           updated_at: string
           width: number
@@ -49,11 +45,7 @@ export type Database = {
           name: string
           pieces_per_box: number
           price_per_box?: number
-                    requires_underlayment?: boolean
-          include_leveling_compound?: boolean
-          include_lvt_adhesive?: boolean
-          include_preparation_compound?: boolean
-          include_planiprep?: boolean
+          requires_underlayment?: boolean
           thickness: number
           updated_at?: string
           width: number
@@ -71,11 +63,7 @@ export type Database = {
           name?: string
           pieces_per_box?: number
           price_per_box?: number
-                    requires_underlayment?: boolean
-          include_leveling_compound?: boolean
-          include_lvt_adhesive?: boolean
-          include_preparation_compound?: boolean
-          include_planiprep?: boolean
+          requires_underlayment?: boolean
           thickness?: number
           updated_at?: string
           width?: number

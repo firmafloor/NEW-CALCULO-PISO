@@ -109,7 +109,7 @@ function AuthPage() {
               </Field>
             )}
             <button className="primary mt-6 w-full" type="submit" disabled={busy}>
-              {busy ? "Aguarde..." : mode === "login" ? "Entrar" : mode === "signup" ? "Criar conta" : "Enviar instruções"}
+              {busy ? "Aguarde..." : mode === "login" ? "Administrador" : mode === "signup" ? "Criar conta" : "Enviar instruções"}
             </button>
             {message && <p className="mt-4 text-sm font-semibold text-primary" role="status">{message}</p>}
           </form>

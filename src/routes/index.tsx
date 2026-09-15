@@ -395,7 +395,7 @@ function Calculadora() {
           {/* RESULTADO */}
           <section className="space-y-6 print:space-y-0">
             <div className="rounded-2xl border border-border bg-card p-6 print-report">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:justify-between">
+                            <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
                   <h2 className="text-xl font-bold tracking-tight print-section-title">Relatório técnico</h2>
                   <p className="mt-1 text-sm text-muted-foreground print:hidden">

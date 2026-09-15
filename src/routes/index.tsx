@@ -8,21 +8,22 @@ import {
   type FloorModel,
 } from "@/lib/floor-calc";
 import { useModels } from "@/lib/use-models";
+import logoAsset from "@/assets/firmafloor-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Calculadora de Pisos e Revestimentos | Orçamento com perdas" },
+      { title: "Calculadora de Pisos e Revestimentos | FirmaFloor" },
       {
         name: "description",
         content:
-          "Calcule área com perda, caixas e peças fechadas, argamassa, rejunte, rodapé e o custo total da obra. Cadastre seus modelos e exporte o orçamento.",
+          "Calcule área com perda, caixas e peças fechadas, manta e rodapé. Cadastre seus modelos e imprima o relatório técnico.",
       },
-      { property: "og:title", content: "Calculadora de Pisos e Revestimentos" },
+      { property: "og:title", content: "Calculadora de Pisos e Revestimentos | FirmaFloor" },
       {
         property: "og:description",
         content:
-          "Área com perda configurável, caixas arredondadas para cima, insumos e resumo de custos pronto para imprimir.",
+          "Área com perda configurável, caixas arredondadas para cima, manta e rodapé — relatório técnico pronto para imprimir.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -48,6 +49,7 @@ const emptyForm = {
   yieldPerBox: "1.44",
   pricePerBox: "0",
   boxUnit: "caixas",
+  requiresUnderlayment: false,
 };
 
 function Calculadora() {
@@ -65,19 +67,9 @@ function Calculadora() {
   const [perimeterMode, setPerimeterMode] = useState<"auto" | "manual">("auto");
   const [perimeter, setPerimeter] = useState("");
 
-  const [groutJoint, setGroutJoint] = useState("3");
-  const [mortarRate, setMortarRate] = useState("5");
-  const [mortarBag, setMortarBag] = useState("20");
-  const [mortarPrice, setMortarPrice] = useState("32");
-  const [groutPack, setGroutPack] = useState("1");
-  const [groutPrice, setGroutPrice] = useState("18");
-
   const [includeBaseboard, setIncludeBaseboard] = useState(true);
   const [baseboardBar, setBaseboardBar] = useState("2.4");
-  const [baseboardPrice, setBaseboardPrice] = useState("45");
   const [piecesPerTube, setPiecesPerTube] = useState("5");
-  const [tubePrice, setTubePrice] = useState("39");
-  const [laborRate, setLaborRate] = useState("55");
 
   const [showRegister, setShowRegister] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -115,18 +107,9 @@ function Calculadora() {
       area: areaValue,
       perimeter: num(perimeter),
       wastePct,
-      groutJoint: num(groutJoint),
-      mortarRate: num(mortarRate),
-      mortarBag: num(mortarBag),
-      mortarPrice: num(mortarPrice),
-      groutPack: num(groutPack),
-      groutPrice: num(groutPrice),
       includeBaseboard,
       baseboardBar: num(baseboardBar),
-      baseboardPrice: num(baseboardPrice),
       piecesPerTube: num(piecesPerTube),
-      tubePrice: num(tubePrice),
-      laborRate: num(laborRate),
     };
     return calculate(input);
   }, [
@@ -134,24 +117,15 @@ function Calculadora() {
     areaValue,
     perimeter,
     wastePct,
-    groutJoint,
-    mortarRate,
-    mortarBag,
-    mortarPrice,
-    groutPack,
-    groutPrice,
     includeBaseboard,
     baseboardBar,
-    baseboardPrice,
     piecesPerTube,
-    tubePrice,
-    laborRate,
   ]);
 
   function exportCsv() {
     if (!result || !model) return;
     const lines = [
-      ["Orçamento de pisos e revestimentos"],
+      ["Relatório técnico de pisos e revestimentos — FirmaFloor"],
       ["Modelo", model.name],
       ["Área útil (m²)", fmt(areaValue)],
       ["Margem de perda (%)", String(wastePct)],
@@ -159,20 +133,14 @@ function Calculadora() {
       ["m² faturados", fmt(result.purchasedArea)],
       ["Sobra técnica (m²)", fmt(result.leftover)],
       [],
-      ["Material", "Qtd exata", "Qtd comercial", "Unidade", "Preço unit.", "Total", "Cálculo"],
+      ["Material", "Qtd exata", "Qtd comercial", "Unidade", "Cálculo"],
       ...result.rows.map((r) => [
         r.name,
         fmt(r.exact),
         String(r.qty),
         r.unit,
-        fmt(r.unitPrice),
-        fmt(r.total),
         r.formula,
       ]),
-      [],
-      ["Materiais", fmt(result.materialsTotal)],
-      ["Mão de obra", fmt(result.laborTotal)],
-      ["Total", fmt(result.grandTotal)],
     ];
     const csv = lines
       .map((l) => l.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(";"))
@@ -180,7 +148,7 @@ function Calculadora() {
     const url = URL.createObjectURL(new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "orcamento-pisos.csv";
+    a.download = "relatorio-pisos.csv";
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -198,6 +166,7 @@ function Calculadora() {
       yieldPerBox: num(form.yieldPerBox),
       pricePerBox: num(form.pricePerBox),
       boxUnit: form.boxUnit || "caixas",
+      requiresUnderlayment: form.requiresUnderlayment,
       custom: true,
     };
     if (!parsed.name || parsed.yieldPerBox <= 0) {
@@ -225,6 +194,7 @@ function Calculadora() {
       yieldPerBox: String(m.yieldPerBox),
       pricePerBox: String(m.pricePerBox),
       boxUnit: m.boxUnit,
+      requiresUnderlayment: m.requiresUnderlayment ?? false,
     });
     setStatus("Edite os dados e salve as alterações.");
   }
@@ -237,20 +207,30 @@ function Calculadora() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        <header className="mb-10">
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-primary">
+        <header className="mb-10 print-header">
+          <img
+            src={logoAsset.url}
+            alt="FirmaFloor — Piso laminado vinílico e revestimentos"
+            className="h-16 w-auto print-logo"
+          />
+          <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.18em] text-primary">
             Obra mais previsível
           </p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
+          <h1 className="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl print-title">
             Calculadora de pisos e revestimentos
           </h1>
-          <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-base text-muted-foreground print:hidden">
             Converta a área do ambiente em uma lista de compra fechada: caixas e peças inteiras,
-            argamassa, rejunte, rodapé e custo total — com perdas e recortes transparentes.
+            manta e rodapé — com perdas e recortes transparentes.
           </p>
+          {model && result && (
+            <p className="mt-2 hidden text-sm text-muted-foreground print:block">
+              {model.name} • {fmt(areaValue)} m² úteis • perda de {fmt(wastePct, 0)}%
+            </p>
+          )}
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:items-start">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:items-start print:block">
           {/* ENTRADAS */}
           <section className="rounded-2xl border border-border bg-card p-6 print:hidden">
             <h2 className="text-xl font-bold tracking-tight">1. Ambiente e material</h2>
@@ -274,7 +254,7 @@ function Calculadora() {
                 <Spec label="Dimensões" value={`${fmt(model.length)} × ${fmt(model.width)} cm`} />
                 <Spec label="Rendimento" value={`${fmt(model.yieldPerBox)} m²/${model.boxUnit.replace(/s$/, "")}`} />
                 <Spec label="Peças" value={`${model.piecesPerBox} / ${model.boxUnit.replace(/s$/, "")}`} />
-                <Spec label="Preço" value={brl(model.pricePerBox)} />
+                <Spec label="Manta" value={model.requiresUnderlayment ? "Sim" : "Não"} />
               </div>
             )}
 
@@ -374,53 +354,20 @@ function Calculadora() {
                 <Field label="Barra de rodapé (m)">
                   <input className="input" type="number" step="0.01" value={baseboardBar} onChange={(e) => setBaseboardBar(e.target.value)} />
                 </Field>
-                <Field label="Preço da barra (R$)">
-                  <input className="input" type="number" step="0.01" value={baseboardPrice} onChange={(e) => setBaseboardPrice(e.target.value)} />
-                </Field>
                 <Field label="Barras por tubo PU">
                   <input className="input" type="number" step="1" value={piecesPerTube} onChange={(e) => setPiecesPerTube(e.target.value)} />
                 </Field>
-                <Field label="Preço do tubo (R$)">
-                  <input className="input" type="number" step="0.01" value={tubePrice} onChange={(e) => setTubePrice(e.target.value)} />
-                </Field>
               </div>
             )}
-
-            <h3 className="mt-6 text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
-              Insumos
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Argamassa (kg/m²)">
-                <input className="input" type="number" step="0.1" value={mortarRate} onChange={(e) => setMortarRate(e.target.value)} />
-              </Field>
-              <Field label="Saco (kg)">
-                <input className="input" type="number" step="1" value={mortarBag} onChange={(e) => setMortarBag(e.target.value)} />
-              </Field>
-              <Field label="Preço do saco (R$)">
-                <input className="input" type="number" step="0.01" value={mortarPrice} onChange={(e) => setMortarPrice(e.target.value)} />
-              </Field>
-              <Field label="Junta (mm)">
-                <input className="input" type="number" step="0.5" value={groutJoint} onChange={(e) => setGroutJoint(e.target.value)} />
-              </Field>
-              <Field label="Rejunte — embalagem (kg)">
-                <input className="input" type="number" step="0.5" value={groutPack} onChange={(e) => setGroutPack(e.target.value)} />
-              </Field>
-              <Field label="Preço do rejunte (R$)">
-                <input className="input" type="number" step="0.01" value={groutPrice} onChange={(e) => setGroutPrice(e.target.value)} />
-              </Field>
-              <Field label="Mão de obra (R$/m²)">
-                <input className="input" type="number" step="0.01" value={laborRate} onChange={(e) => setLaborRate(e.target.value)} />
-              </Field>
-            </div>
           </section>
 
           {/* RESULTADO */}
-          <section className="space-y-6">
-            <div className="rounded-2xl border border-border bg-card p-6">
+          <section className="space-y-6 print:space-y-0">
+            <div className="rounded-2xl border border-border bg-card p-6 print-report">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:justify-between">
                 <div className="min-w-0">
-                  <h2 className="text-xl font-bold tracking-tight">2. Resultado detalhado</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <h2 className="text-xl font-bold tracking-tight print-section-title">Relatório técnico</h2>
+                  <p className="mt-1 text-sm text-muted-foreground print:hidden">
                     {model && result
                       ? `${model.name} • ${fmt(areaValue)} m² úteis • perda de ${fmt(wastePct, 0)}%`
                       : "Informe uma área maior que zero para calcular."}
@@ -434,15 +381,15 @@ function Calculadora() {
 
               {result && model && (
                 <>
-                  <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 print-metrics">
                     <Metric value={`${fmt(result.areaWithWaste)} m²`} label="Área com perda" hint={`+ ${fmt(result.wasteArea)} m² de recortes`} />
                     <Metric value={`${result.boxes}`} label={`${model.boxUnit} a comprar`} hint={`exato: ${fmt(result.exactBoxes)}`} highlight />
                     <Metric value={`${result.pieces}`} label="peças inteiras" hint={`${model.piecesPerBox} por ${model.boxUnit.replace(/s$/, "")}`} />
                     <Metric value={`${fmt(result.purchasedArea)} m²`} label="m² faturados" hint={`sobra técnica: ${fmt(result.leftover)} m²`} />
                   </div>
 
-                  <h3 className="mt-8 text-base font-bold">Lista de materiais</h3>
-                  <div className="mt-3 overflow-x-auto rounded-xl border border-border">
+                  <h3 className="mt-8 text-base font-bold print-subtitle">Lista de materiais</h3>
+                  <div className="mt-3 overflow-x-auto rounded-xl border border-border print-table">
                     <table className="w-full min-w-[720px] text-left text-sm">
                       <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
                         <tr>
@@ -466,51 +413,6 @@ function Calculadora() {
                       </tbody>
                     </table>
                   </div>
-
-                  <h3 className="mt-8 text-base font-bold">Resumo de custos</h3>
-                  <div className="mt-3 overflow-x-auto rounded-xl border border-border">
-                    <table className="w-full min-w-[520px] text-left text-sm">
-                      <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
-                        <tr>
-                          <th className="p-3">Item</th>
-                          <th className="p-3">Qtd.</th>
-                          <th className="p-3">Preço unit.</th>
-                          <th className="p-3">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {result.rows
-                          .filter((r) => r.unitPrice > 0)
-                          .map((r) => (
-                            <tr key={r.name} className="border-t border-border">
-                              <td className="p-3">{r.name}</td>
-                              <td className="p-3">{r.qty} {r.unit}</td>
-                              <td className="p-3">{brl(r.unitPrice)}</td>
-                              <td className="p-3 font-semibold">{brl(r.total)}</td>
-                            </tr>
-                          ))}
-                        <tr className="border-t border-border">
-                          <td className="p-3">Mão de obra</td>
-                          <td className="p-3">{fmt(areaValue)} m²</td>
-                          <td className="p-3">{brl(num(laborRate))}</td>
-                          <td className="p-3 font-semibold">{brl(result.laborTotal)}</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr className="border-t-2 border-primary/40 bg-muted">
-                          <td className="p-3 font-black" colSpan={3}>
-                            Total do orçamento
-                          </td>
-                          <td className="p-3 text-lg font-black text-primary">{brl(result.grandTotal)}</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Materiais {brl(result.materialsTotal)} + mão de obra {brl(result.laborTotal)} ={" "}
-                    {brl(result.costPerSqm)} por m² de área útil. Consumo de rejunte estimado em{" "}
-                    {fmt(result.groutRate, 3)} kg/m² ({fmt(result.groutKg)} kg no total).
-                  </p>
                 </>
               )}
             </div>
@@ -542,6 +444,14 @@ function Calculadora() {
                       <input className="input" type="number" step="0.01" value={form.yieldPerBox} onChange={(e) => setForm({ ...form, yieldPerBox: e.target.value })} />
                     </Field>
                     <Field label="Preço por caixa (R$)"><input className="input" type="number" step="0.01" value={form.pricePerBox} onChange={(e) => setForm({ ...form, pricePerBox: e.target.value })} /></Field>
+                    <label className="flex items-center gap-2 self-end pb-2 text-sm font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={form.requiresUnderlayment}
+                        onChange={(e) => setForm({ ...form, requiresUnderlayment: e.target.checked })}
+                      />
+                      Requer manta de instalação
+                    </label>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <button className="primary" onClick={submitModel}>
@@ -579,6 +489,7 @@ function Calculadora() {
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
                       {fmt(m.yieldPerBox)} m² por {m.boxUnit.replace(/s$/, "")} • {m.piecesPerBox} peças
+                      {m.requiresUnderlayment ? " • com manta" : ""}
                     </p>
                     <div className="mt-3 flex gap-2">
                       <button className="ghost" onClick={() => startEdit(m)}>Alterar</button>
@@ -600,7 +511,7 @@ function Calculadora() {
               </button>
             </div>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground print-note">
               Este cálculo é uma estimativa de compra. A conferência final deve considerar paginação,
               recortes, vãos, prumo e as recomendações do fabricante.
             </p>
@@ -674,8 +585,8 @@ function Metric({
   highlight?: boolean;
 }) {
   return (
-    <div className={`rounded-xl p-4 ${highlight ? "bg-primary/10" : "bg-muted"}`}>
-      <b className="block text-2xl font-black leading-tight text-primary">{value}</b>
+    <div className={`rounded-xl p-4 print-metric ${highlight ? "bg-primary/10" : "bg-muted"}`}>
+      <b className="block text-2xl font-black leading-tight text-primary print-metric-value">{value}</b>
       <span className="text-xs font-semibold uppercase tracking-wide">{label}</span>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </div>

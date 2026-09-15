@@ -10,7 +10,7 @@ import {
 import type { QueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { initializeProfile } from "@/lib/profile.functions";
-import { AuthContext, type AccessRole } from "@/lib/auth-state";
+import { AuthContext, type AccessRole, type Profile } from "@/lib/auth-state";
 
 function isInvalidCachedSession(error: unknown) {
   if (!error || typeof error !== "object") return false;

@@ -151,7 +151,7 @@ function Calculadora() {
     URL.revokeObjectURL(url);
   }
 
-  function submitModel() {
+  async function submitModel() {
     const parsed: FloorModel = {
       id: editingId ?? `custom-${Date.now()}`,
       name: form.name.trim(),
@@ -171,11 +171,15 @@ function Calculadora() {
       setStatus("Informe ao menos o nome do modelo e o rendimento por caixa.");
       return;
     }
-    saveModel(parsed);
-    setModelId(parsed.id);
-    setStatus(editingId ? "Modelo atualizado." : "Modelo cadastrado com sucesso.");
-    setForm(emptyForm);
-    setEditingId(null);
+    try {
+      await saveModel(parsed);
+      setModelId(parsed.id);
+      setStatus(editingId ? "Modelo atualizado." : "Modelo cadastrado com sucesso.");
+      setForm(emptyForm);
+      setEditingId(null);
+    } catch {
+      setStatus("Não foi possível salvar o modelo. Tente novamente.");
+    }
   }
 
   function startEdit(m: FloorModel) {
@@ -491,7 +495,11 @@ function Calculadora() {
                       <button
                         className="ghost"
                         onClick={() => {
-                          if (confirm(`Excluir o modelo "${m.name}"?`)) deleteModel(m.id);
+                          if (confirm(`Excluir o modelo "${m.name}"?`)) {
+                            deleteModel(m.id).catch(() => {
+                              setStatus("Não foi possível excluir o modelo. Tente novamente.");
+                            });
+                          }
                         }}
                       >
                         Excluir
@@ -501,7 +509,14 @@ function Calculadora() {
                   </div>
                 ))}
               </div>
-              <button className="ghost mt-4" onClick={restoreDefaults}>
+              <button
+                className="ghost mt-4"
+                onClick={() => {
+                  restoreDefaults()
+                    .then(() => setStatus("Modelos padrão restaurados."))
+                    .catch(() => setStatus("Não foi possível restaurar os modelos padrão."));
+                }}
+              >
                 Restaurar modelos padrão
               </button>
             </div>

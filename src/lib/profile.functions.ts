@@ -26,7 +26,7 @@ export const initializeProfile = createServerFn({ method: "POST" })
     const displayName = data.displayName || metadataDisplayName;
     const avatarUrl = data.avatarUrl || "";
     const { data: authenticatedRole, error: authenticatedInitializeError } =
-      await context.supabase.rpc(
+      await (context.supabase as unknown as import("@supabase/supabase-js").SupabaseClient<any>).rpc(
       "initialize_user_profile",
       {
         _user_id: context.userId,

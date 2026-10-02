@@ -26,7 +26,7 @@ export const initializeProfile = createServerFn({ method: "POST" })
     const displayName = data.displayName || metadataDisplayName;
     const avatarUrl = data.avatarUrl || "";
     const { data: authenticatedRole, error: authenticatedInitializeError } =
-      await context.supabase.rpc(
+      await (context.supabase as unknown as import("@supabase/supabase-js").SupabaseClient<any>).rpc(
       "initialize_user_profile",
       {
         _user_id: context.userId,
@@ -37,7 +37,7 @@ export const initializeProfile = createServerFn({ method: "POST" })
     );
 
     if (!authenticatedInitializeError) {
-      const { data: profile, error: profileError } = await context.supabase
+      const { data: profile, error: profileError } = await (context.supabase as unknown as import("@supabase/supabase-js").SupabaseClient<any>)
         .from("profiles")
         .select("display_name, avatar_url, preferences")
         .eq("id", context.userId)
@@ -45,7 +45,8 @@ export const initializeProfile = createServerFn({ method: "POST" })
       if (!profileError && profile) return { role: authenticatedRole, profile };
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: typedAdmin } = await import("@/integrations/supabase/client.server");
+    const supabaseAdmin = typedAdmin as unknown as import("@supabase/supabase-js").SupabaseClient<any>;
     const { data: role, error: initializeError } = await supabaseAdmin.rpc(
       "initialize_user_profile",
       {

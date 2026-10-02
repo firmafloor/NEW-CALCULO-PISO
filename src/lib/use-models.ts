@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { db as supabase } from "@/lib/db";
 import { DEFAULT_MODELS, type FloorModel } from "./floor-calc";
-import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyRow = any;
 import { useAuth } from "./auth-state";
 
-type FloorModelRow = Tables<"floor_models">;
+type FloorModelRow = AnyRow;
 
 const fromRow = (row: FloorModelRow): FloorModel => ({
   id: row.id,
@@ -26,7 +27,7 @@ const fromRow = (row: FloorModelRow): FloorModel => ({
   custom: !row.is_default,
 });
 
-const toRow = (model: FloorModel): TablesInsert<"floor_models"> => ({
+const toRow = (model: FloorModel): AnyRow => ({
   id: model.id,
   name: model.name,
   manufacturer: model.manufacturer,

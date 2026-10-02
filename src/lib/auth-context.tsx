@@ -13,7 +13,7 @@ import { initializeProfile } from "@/lib/profile.functions";
 import { AuthContext, type AccessRole, type Profile } from "@/lib/auth-state";
 
 const ACCESS_CACHE_KEY = "firmafloor.access.v1";
-const ADMIN_EMAIL = "firmafloor@gmail.com";
+const ADMIN_EMAILS = new Set(["firmafloor@gmail.com", "financeirofirmafloor@gmail.com"]);
 
 type AccessCache = {
   version: 1;
@@ -112,7 +112,7 @@ export function AuthProvider({
   const applyAccess = useCallback(
     (currentUser: User, nextRole: AccessRole, nextProfile: Profile) => {
       const effectiveRole =
-        normalizeEmail(currentUser.email) === ADMIN_EMAIL || nextRole === "admin"
+        ADMIN_EMAILS.has(normalizeEmail(currentUser.email)) || nextRole === "admin"
           ? "admin"
           : "operador";
       setUser(currentUser);
@@ -141,7 +141,7 @@ export function AuthProvider({
       const cached = readAccessCache(currentUser.id);
       const databaseRole = roleResult.data?.role;
       const recoveredRole: AccessRole =
-        normalizeEmail(currentUser.email) === ADMIN_EMAIL || databaseRole === "admin"
+        ADMIN_EMAILS.has(normalizeEmail(currentUser.email)) || databaseRole === "admin"
           ? "admin"
           : databaseRole === "operador"
             ? "operador"

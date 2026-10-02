@@ -241,10 +241,10 @@ export function calculate(input: CalcInput): CalcResult {
         if (model.includeLevelingCompound ?? true) {
     rows.push({
       name: "Massa autonivelante",
-      qty: ceil(area / 5),
-      exact: area / 5,
+      qty: ceil(area / 4),
+      exact: area / 4,
       unit: "sacos de 20 kg",
-      formula: `${fmt(area)} m² ÷ 5 m² por saco = ${fmt(area / 5)} → ${ceil(area / 5)}`,
+      formula: `${fmt(area)} m² ÷ 4 m² por saco = ${fmt(area / 4)} → ${ceil(area / 4)}`,
     });
   }
   if (model.includeLvtAdhesive ?? true) {

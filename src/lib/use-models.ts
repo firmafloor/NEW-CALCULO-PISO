@@ -10,34 +10,37 @@ type FloorModelRow = AnyRow;
 const fromRow = (row: FloorModelRow): FloorModel => ({
   id: row.id,
   name: row.name,
-  manufacturer: row.manufacturer,
+  manufacturer: row.manufacturer ?? row.brand ?? "",
   kind: row.kind,
   length: row.length,
   width: row.width,
   thickness: row.thickness,
   piecesPerBox: row.pieces_per_box,
-  yieldPerBox: row.yield_per_box,
-  pricePerBox: row.price_per_box,
+  yieldPerBox: Number(row.yield_per_box ?? row.box_sqm ?? 0),
+  pricePerBox: Number(row.price_per_box ?? 0),
   boxUnit: row.box_unit,
     requiresUnderlayment: row.requires_underlayment,
   includeLevelingCompound: row.include_leveling_compound,
   includeLvtAdhesive: row.include_lvt_adhesive,
   includePreparationCompound: row.include_preparation_compound,
   includePlaniprep: row.include_planiprep,
-  custom: !row.is_default,
+  custom: row.is_custom ?? !row.is_default,
 });
 
 const toRow = (model: FloorModel): AnyRow => ({
   id: model.id,
   name: model.name,
   manufacturer: model.manufacturer,
+  brand: model.manufacturer,
   kind: model.kind,
   length: model.length,
   width: model.width,
   thickness: model.thickness,
   pieces_per_box: model.piecesPerBox,
   yield_per_box: model.yieldPerBox,
+  box_sqm: model.yieldPerBox,
   price_per_box: model.pricePerBox,
+  price_sqm: model.yieldPerBox > 0 ? model.pricePerBox / model.yieldPerBox : 0,
   box_unit: model.boxUnit,
     requires_underlayment: model.requiresUnderlayment ?? false,
   include_leveling_compound: model.includeLevelingCompound ?? true,
@@ -45,6 +48,8 @@ const toRow = (model: FloorModel): AnyRow => ({
   include_preparation_compound: model.includePreparationCompound ?? true,
   include_planiprep: model.includePlaniprep ?? true,
   is_deleted: false,
+  active: true,
+  is_custom: model.custom ?? true,
 });
 
 export function useModels() {
@@ -90,7 +95,7 @@ export function useModels() {
     if (!isAdmin) throw new Error("Apenas administradores podem excluir modelos.");
     const { error } = await supabase
       .from("floor_models")
-      .update({ is_deleted: true })
+      .update({ is_deleted: true, active: false })
       .eq("id", id);
     if (error) throw error;
     await loadModels();

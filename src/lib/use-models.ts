@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { db as supabase } from "@/lib/db";
 import { DEFAULT_MODELS, type FloorModel } from "./floor-calc";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyRow = Record<string, any>;
+type AnyRow = any;
 import { useAuth } from "./auth-state";
 
 type FloorModelRow = AnyRow;

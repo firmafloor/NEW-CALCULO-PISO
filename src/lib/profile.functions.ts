@@ -37,7 +37,7 @@ export const initializeProfile = createServerFn({ method: "POST" })
     );
 
     if (!authenticatedInitializeError) {
-      const { data: profile, error: profileError } = await context.supabase
+      const { data: profile, error: profileError } = await (context.supabase as unknown as import("@supabase/supabase-js").SupabaseClient<any>)
         .from("profiles")
         .select("display_name, avatar_url, preferences")
         .eq("id", context.userId)

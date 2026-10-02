@@ -45,7 +45,8 @@ export const initializeProfile = createServerFn({ method: "POST" })
       if (!profileError && profile) return { role: authenticatedRole, profile };
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: typedAdmin } = await import("@/integrations/supabase/client.server");
+    const supabaseAdmin = typedAdmin as unknown as import("@supabase/supabase-js").SupabaseClient<any>;
     const { data: role, error: initializeError } = await supabaseAdmin.rpc(
       "initialize_user_profile",
       {

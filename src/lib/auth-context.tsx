@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import type { QueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db as supabase } from "@/lib/db";
 import { initializeProfile } from "@/lib/profile.functions";
 import { AuthContext, type AccessRole, type Profile } from "@/lib/auth-state";
 

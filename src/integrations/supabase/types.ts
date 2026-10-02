@@ -14,140 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      floor_models: {
-        Row: {
-          box_unit: string
-          created_at: string
-          id: string
-          include_leveling_compound: boolean
-          include_lvt_adhesive: boolean
-          include_planiprep: boolean
-          include_preparation_compound: boolean
-          is_default: boolean
-          is_deleted: boolean
-          kind: string
-          length: number
-          manufacturer: string
-          name: string
-          pieces_per_box: number
-          price_per_box: number
-          requires_underlayment: boolean
-          thickness: number
-          updated_at: string
-          width: number
-          yield_per_box: number
-        }
-        Insert: {
-          box_unit?: string
-          created_at?: string
-          id: string
-          include_leveling_compound?: boolean
-          include_lvt_adhesive?: boolean
-          include_planiprep?: boolean
-          include_preparation_compound?: boolean
-          is_default?: boolean
-          is_deleted?: boolean
-          kind?: string
-          length: number
-          manufacturer?: string
-          name: string
-          pieces_per_box: number
-          price_per_box?: number
-          requires_underlayment?: boolean
-          thickness: number
-          updated_at?: string
-          width: number
-          yield_per_box: number
-        }
-        Update: {
-          box_unit?: string
-          created_at?: string
-          id?: string
-          include_leveling_compound?: boolean
-          include_lvt_adhesive?: boolean
-          include_planiprep?: boolean
-          include_preparation_compound?: boolean
-          is_default?: boolean
-          is_deleted?: boolean
-          kind?: string
-          length?: number
-          manufacturer?: string
-          name?: string
-          pieces_per_box?: number
-          price_per_box?: number
-          requires_underlayment?: boolean
-          thickness?: number
-          updated_at?: string
-          width?: number
-          yield_per_box?: number
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          display_name: string
-          id: string
-          preferences: Json
-          updated_at: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          display_name?: string
-          id: string
-          preferences?: Json
-          updated_at?: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          display_name?: string
-          id?: string
-          preferences?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      initialize_user_profile: {
-        Args: {
-          _avatar_url?: string
-          _display_name?: string
-          _email: string
-          _user_id: string
-        }
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "operador"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -274,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "operador"],
-    },
+    Enums: {},
   },
 } as const

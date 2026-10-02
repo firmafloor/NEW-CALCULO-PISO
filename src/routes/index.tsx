@@ -199,8 +199,13 @@ function Calculadora() {
       setEditingId(null);
     } catch (error) {
       console.error(error);
-      const message = error instanceof Error ? error.message : String(error);
-      setStatus(`Não foi possível salvar o modelo. Tente novamente. ${message}`);
+      const message =
+        error instanceof Error
+          ? error.message
+          : error && typeof error === "object" && "message" in error
+            ? String(error.message)
+            : JSON.stringify(error);
+      setStatus(`Não foi possível salvar o modelo. ${message}`);
     }
   }
 
